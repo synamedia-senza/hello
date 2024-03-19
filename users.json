@@ -1,0 +1,9 @@
+{
+    "7e6d37c30d21af04": {"name": "Andrew", "color": "#FBD6D3"},
+    "7e6d37c30d21af05": {"name": "Bob", "color": "#FCEED8"},
+    "7e6d37c30d21af06": {"name": "Charlie", "color": "#FFFFDD"},
+    "7e6d37c30d21af07": {"name": "Dora", "color": "#D7E5D3"},
+    "7e6d37c30d21af08": {"name": "Eliza", "color": "#CCCDFD"},
+    "7e6d37c30d21af09": {"name": "Felicity", "color": "#E3D0E5"},
+    "default": {"name": "guest", "color": "#D7E5D3"}
+}
