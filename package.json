@@ -1,7 +1,7 @@
 {
   "name": "hello",
   "version": "1.0.0",
-  "description": "Authorizer simulator",
+  "description": "Device authorization",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
