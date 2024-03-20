@@ -121,7 +121,3 @@ function validateAccessToken(req) {
 
 const server = app.listen(port, () =>
     console.log(`Authentication Server Simulator is Running on port ${port}`));
-
-module.exports = app;
-
-module.exports = server;
