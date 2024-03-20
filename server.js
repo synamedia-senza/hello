@@ -82,8 +82,6 @@ function newAcccessToken() {
     return Array.from({ length: 6 }, () => Math.random().toString(36).substr(2)).join('');
 };
 
-let allowGuest = true;
-
 app.get('/hello', function (req, res) {
   try {
     let deviceId = validateAccessToken(req);
