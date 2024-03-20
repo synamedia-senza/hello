@@ -87,21 +87,24 @@ let allowGuest = true;
 app.get('/hello', function (req, res) {
   try {
     let deviceId = validateAccessToken(req);
-    let userInfo = users[deviceId];
-    if (!userInfo) {
-      if (allowGuest) {
-        userInfo = users["default"];
-      } else {
-        res.status(403).json({message: "Device not allowed!"});
-        return;
-      }
-    }
-    console.log("User info:", userInfo);
+    let userInfo = getUserInfo(deviceId, true);
     res.json(userInfo);
   } catch (error) {
     res.status(401).json({message: error.message});
   }
 });
+
+function getUserInfo(deviceId, allowGuest) {
+  let userInfo = users[deviceId];
+  if (!userInfo && allowGuest) {
+    userInfo = users["default"];
+  }
+  if (!userInfo) {
+    throw new Error("Device not recognized!");
+  }
+  console.log("User info:", userInfo);
+  return userInfo;
+}
 
 function validateAccessToken(req) {
   let authorization = req.headers.authorization;
