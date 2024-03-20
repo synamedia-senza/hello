@@ -11,13 +11,14 @@ cd public
 npm install
 npm ci
 npx webpack --config webpack.config.js
-
+cd ..
 ```
 
 ## Run
 
 ```
 node server.js
+ngrok http 8080
 ```
-The server will run on port 8080. Open the link on a Senza device.
+Open the link shown by ngrok on a Senza device.
 
