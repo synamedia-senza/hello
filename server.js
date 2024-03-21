@@ -16,7 +16,8 @@ app.use(cors()); // enable cores
 
 const server = app.listen(port, () => console.log("Hello running on port " + port));
 
-/** /auth/token **/
+
+/** Request auth token **/
 
 let tokenDevices = {};
 
@@ -63,10 +64,9 @@ async function getJwks(iss) {
       }
     }
   } catch (err) {
-      console.error(`Error : Cannot load Hyperscale keys : ${err.message}, ${err.stack}`);
+      console.error(`Error: Cannot load Senza keys: ${err.message}, ${err.stack}`);
   }
-
-  console.error(`Error : Cannot load Hyperscale keys`);
+  console.error(`Error: Cannot load Senza keys`);
 }
 
 function getDeviceId(payload) {
@@ -87,8 +87,7 @@ function newAcccessToken() {
 };
 
 
-
-/** /hello **/
+/** Get user info **/
 
 app.get('/hello', function (req, res) {
   try {
