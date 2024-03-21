@@ -14,8 +14,7 @@ app.use(express.json());
 app.use(errorHandler({dumpExceptions: true, showStack: true}));
 app.use(cors()); // enable cores
 
-const server = app.listen(port, () =>
-    console.log(`Authentication Server Simulator is Running on port ${port}`));
+const server = app.listen(port, () => console.log("Hello running on port " + port));
 
 /** /auth/token **/
 
