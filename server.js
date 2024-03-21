@@ -14,6 +14,11 @@ app.use(express.json());
 app.use(errorHandler({dumpExceptions: true, showStack: true}));
 app.use(cors()); // enable cores
 
+const server = app.listen(port, () =>
+    console.log(`Authentication Server Simulator is Running on port ${port}`));
+
+/** /auth/token **/
+
 let tokenDevices = {};
 
 app.post("/auth/token", async (req, res) => {
@@ -82,6 +87,10 @@ function newAcccessToken() {
     return Array.from({ length: 6 }, () => Math.random().toString(36).substr(2)).join('');
 };
 
+
+
+/** /hello **/
+
 app.get('/hello', function (req, res) {
   try {
     let deviceId = validateAccessToken(req);
@@ -91,18 +100,6 @@ app.get('/hello', function (req, res) {
     res.status(401).json({message: error.message});
   }
 });
-
-function getUserInfo(deviceId, allowGuest) {
-  let userInfo = users[deviceId];
-  if (!userInfo && allowGuest) {
-    userInfo = users["default"];
-  }
-  if (!userInfo) {
-    throw new Error("Device not recognized!");
-  }
-  console.log("User info:", userInfo);
-  return userInfo;
-}
 
 function validateAccessToken(req) {
   let authorization = req.headers.authorization;
@@ -120,5 +117,14 @@ function validateAccessToken(req) {
   return deviceId;
 }
 
-const server = app.listen(port, () =>
-    console.log(`Authentication Server Simulator is Running on port ${port}`));
+function getUserInfo(deviceId, allowGuest) {
+  let userInfo = users[deviceId];
+  if (!userInfo && allowGuest) {
+    userInfo = users["default"];
+  }
+  if (!userInfo) {
+    throw new Error("Device not recognized!");
+  }
+  console.log("User info:", userInfo);
+  return userInfo;
+}
