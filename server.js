@@ -41,7 +41,6 @@ app.post("/auth/token", async (req, res) => {
 async function validateClientAssertion(clientAssertion) {
   const payload = decodeJwt(clientAssertion);
   console.log("JWT:", payload);
-  console.log("Device ID: " + getDeviceId(payload));
   const jwks = await getJwks(payload.iss);
   return payload;
 }
@@ -76,10 +75,10 @@ function getDeviceId(payload) {
 
 async function generateAccessToken(payload) {
   let deviceId = getDeviceId(payload);
-  let token = newAcccessToken();
-  tokenDevices[token] = deviceId;
-  console.log(`Device: ${deviceId}\nAccess token: ${token}`);
-  return token;
+  let accessToken = newAcccessToken();
+  tokenDevices[accessToken] = deviceId;
+  console.log(`Set device ${deviceId} for access token ${accessToken}`);
+  return accessToken;
 }
 
 function newAcccessToken() {
@@ -105,13 +104,11 @@ function validateAccessToken(req) {
     throw new Error("No access token!");
   }
   let accessToken = authorization.substring("Bearer ".length);
-  console.log("Access token: " + accessToken);
-  
   let deviceId = tokenDevices[accessToken];
   if (!deviceId) {
     throw new Error("Invalid access token!");
   }
-  console.log("Device: " + deviceId);
+  console.log(`Got device ${deviceId} for access token ${accessToken}`);
   return deviceId;
 }
 
