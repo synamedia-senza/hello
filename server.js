@@ -5,7 +5,7 @@ const errorHandler = require('errorhandler');
 const got = require("got");
 const decodeJwt = require("jwt-decode");
 const port = 8080;
-const users = require("./users.json");
+const config = require("./config.json");
 const app = express();
 
 app.use(express.static(__dirname + "/public"));
@@ -16,10 +16,11 @@ app.use(cors()); // enable cores
 
 const server = app.listen(port, () => console.log("Hello running on port " + port));
 
-
-/** Request auth token **/
+/** Request an access token **/
 
 let tokenDevices = {};
+let users = config.users;
+let devices = config.devices;
 
 app.post("/auth/token", async (req, res) => {
   const clientAssertion = req.body.assertion;
@@ -85,13 +86,13 @@ function newAcccessToken() {
     return Array.from({ length: 6 }, () => Math.random().toString(36).substr(2)).join('');
 };
 
-
-/** Get user info **/
+/** Use the access token to get the user info **/
 
 app.get('/hello', function (req, res) {
   try {
     let deviceId = validateAccessToken(req);
-    let userInfo = getUserInfo(deviceId, true);
+    let userInfo = structuredClone(getUserInfo(deviceId));
+    delete userInfo.password;
     res.json(userInfo);
   } catch (error) {
     res.status(401).json({message: error.message});
@@ -112,14 +113,106 @@ function validateAccessToken(req) {
   return deviceId;
 }
 
-function getUserInfo(deviceId, allowGuest) {
-  let userInfo = users[deviceId];
-  if (!userInfo && allowGuest) {
-    userInfo = users["default"];
-  }
-  if (!userInfo) {
-    throw new Error("Device not recognized!");
-  }
+function getUserInfo(deviceId) {
+  let username = devices[deviceId];
+  if (!username) throw new Error("Device not authorized!");
+  let userInfo = users[username];
+  if (!userInfo) throw new Error("Unknown user!");
+
   console.log("User info:", userInfo);
   return userInfo;
+}
+
+
+
+
+/** Use username and password to authorize the device **/
+
+app.post('/authorize', function (req, res) {
+  try {
+    console.log(req.body);
+    let accessToken = req.body.accessToken;
+    if (!accessToken) throw new Error("Missing access token.");
+    let deviceId = tokenDevices[accessToken];
+    if (!deviceId) throw new Error("Invalid access token: " + accessToken);
+    let username = req.body.username;
+    if (!username) throw new Error("Missing username.");
+    let userInfo = users[username];
+    if (!userInfo) throw new Error("Invalid username: " + username);
+    let password = req.body.password;
+    if (!password) throw new Error("Missing password.");
+    if (password != userInfo.password) throw new Error("Invalid password: " + password);
+   
+    // authorized the device for the user
+    // you should store this in your database
+    devices[deviceId] = username; 
+    console.log("Authorized " + username);
+    
+    // let the app know to try using device authorization again
+    sendDeviceMessage(deviceId, {authorized: true}, "DeviceAuthorized");
+    
+    res.json({status: "authorized"});
+  } catch (error) {
+    console.log(error.message)
+    res.status(401).json({message: error.message});
+  }
+});
+
+app.get('/goodbye', function (req, res) {
+  let authorization = req.headers.authorization;
+  if (authorization && authorization.startsWith("Bearer ")) {
+    let accessToken = authorization.substring("Bearer ".length);
+    let deviceId = tokenDevices[accessToken];
+    
+    delete tokenDevices[accessToken];
+    console.log("Deauthorized " + deviceId);
+  }
+  res.json({});
+});
+
+// Use this function to create password hashes
+function passwordHash(str) {
+  let hash = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+    hash = Math.abs(hash);
+  }
+  return hash;
+}
+
+/** When the device has been authorized, send a message to have it try again **/
+
+async function getSenzaAcesssToken() {
+  let tokenResponse = await fetch("https://auth.synamedia.com/oauth/token", {
+  	method: "post",
+  	body: JSON.stringify(config.oauth),
+  	headers: {"Content-Type": "application/json"}
+  });
+  let json = await tokenResponse.json();
+  return json.access_token;
+}
+
+let senzaAccessToken = "";
+getSenzaAcesssToken().then((token) => {
+  senzaAccessToken = token;
+  setTimeout(() => senzaAcesssToken = getSenzaAcesssToken(), 21600000);
+});
+
+async function sendDeviceMessage(deviceId, payload, eventName) {
+  await fetch("https://hyperscale-message-broker-main.ingress.active.streaming.synamedia.com/" + 
+    "message-broker/1.0/messages/devices/" + deviceId, {
+  	method: "post",
+  	body: JSON.stringify({
+      payload, 
+      eventName, 
+      "target": "application",
+      "origin": "internal"
+    }),
+  	headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + senzaAccessToken
+    }
+  });
 }

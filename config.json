@@ -1,0 +1,46 @@
+{
+    "oauth": {
+      "client_id": "lYoe333L5xRvY8Mr53solKSnIdGSUAq8",
+      "client_secret": "9zJAJb4tFWIo3vH1DfpYT_0e4xBBmlxyOvTZjJ-cr_-G9NFi-c6nPIlc5Ha6oAnz",
+      "audience": "https://projects.synamedia.com",
+      "grant_type": "client_credentials"
+    },
+    "users": {
+        "andrew": {
+            "name": "Andrew",
+            "color": "#FBD6D3",
+            "password": 1634710681
+        },
+        "bob": {
+            "name": "Bob", 
+            "color": "#FCEED8",
+            "password": 1634710681
+        },
+        "charlie": {
+            "name": "Charlie",
+            "color": "#FFFFDD",
+            "password": 1634710681
+        },
+        "dora": {
+            "name": "Dora", 
+            "color": "#D7E5D3",
+            "password": 1634710681
+        },
+        "eliza": {
+            "name": "Eliza", 
+            "color": "#CCCDFD",
+            "password": 1634710681
+        },
+        "sergio": {
+            "name": "Sergio", 
+            "color": "#E3D0E5",
+            "password": 1634710681
+        }
+    },
+    "devices": {
+        "7e6d37c30d21af04": "andrew",
+        "06fffbeb0d21af04": "andrew",
+        "06fffbd70d21af04": "eliza",
+        "06fffb270d21af04": "sergio"
+    }
+}

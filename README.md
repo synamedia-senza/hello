@@ -1,6 +1,12 @@
 # Hello
 
-A demonstration of client authentication. 
+A demonstration of device-based authentication. 
+
+If your device is connected to an account in the config.json file, it will authorize automatically. 
+
+If the device is not connected to an account, it will show a QR code that you can scan with your phone. When you sign in (default credentials are "eliza" / "Senza2024"), it will associate the device with your account. This will take effect as long as the server is running. 
+
+Hit the back button (escape key) to disconnect the device from your account.
 
 ## Build
 

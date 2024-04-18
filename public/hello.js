@@ -1,15 +1,19 @@
-import { init, uiReady, auth } from "@Synamedia/hs-sdk";
+import { init, uiReady, auth, deviceManager, messageManager } from "@Synamedia/hs-sdk";
+
+let accessToken = "";
 
 window.addEventListener("load", async () => {
   await init();
   
   let assertion = await getClientAssertion();
-  let accessToken = await getAccessToken(assertion);
-  let userInfo = await hello(accessToken);
-  updateUserInfo(userInfo);
-
+  accessToken = await getAccessToken(assertion);
   console.log("Access token: " + accessToken);
-  console.log("Hello:", userInfo);
+  
+  hello();
+
+  messageManager.addEventListener("message", async (event) => {
+    hello();
+  });
 
   uiReady();
 });
@@ -34,17 +38,52 @@ async function getAccessToken(assertion) {
   return json.access_token;
 }
 
-async function hello(accessToken) {
+async function hello() {
   let response = await fetch("/hello", {
   	headers: { "Authorization": "Bearer " + accessToken }
   });
+  if (response.status == 401) {
+    console.log("Unauthorized.");
+    showQRCode();
+  } 
   let json = await response.json();
-  return json;
+  console.log("Hello: ", json);
+  updateUserInfo(json);
 } 
 
 function updateUserInfo(userInfo) {
   if (userInfo?.name && userInfo?.color) {
     banner.innerHTML = `Hello, ${userInfo.name}!`;
     body.style.backgroundColor = userInfo?.color;
+    qrcode.style.display = "none";
   }
 }
+
+function showQRCode() {
+  let page = window.location.href;
+  if (page.endsWith("html") || page.endsWith("/")) {
+    page = page.substring(0, page.lastIndexOf('/'));
+  }
+  let size = 400; 
+  let data = encodeURIComponent(page + "/login.html#" + accessToken);
+  let src = `https://api.qrserver.com/v1/create-qr-code/?data=${data}&size=${size}x${size}`;
+  qrcode.src = src;
+  qrcode.style.display = "block";
+  
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key == "Escape") {
+    goodbye();
+  }
+});
+
+async function goodbye() {
+  let response = await fetch("/goodbye", {
+  	headers: { "Authorization": "Bearer " + accessToken }
+  });
+  banner.innerHTML = "";
+  body.style.backgroundColor = "white";
+  showQRCode();
+} 
+
