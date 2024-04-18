@@ -1,7 +1,7 @@
 {
     "oauth": {
-      "client_id": "lYoe333L5xRvY8Mr53solKSnIdGSUAq8",
-      "client_secret": "9zJAJb4tFWIo3vH1DfpYT_0e4xBBmlxyOvTZjJ-cr_-G9NFi-c6nPIlc5Ha6oAnz",
+      "client_id": "your_client_id",
+      "client_secret": "your_client_secret",
       "audience": "https://projects.synamedia.com",
       "grant_type": "client_credentials"
     },
