@@ -156,15 +156,19 @@ app.post('/authorize', function (req, res) {
 });
 
 app.get('/goodbye', function (req, res) {
-  let authorization = req.headers.authorization;
-  if (authorization && authorization.startsWith("Bearer ")) {
-    let accessToken = authorization.substring("Bearer ".length);
-    let deviceId = tokenDevices[accessToken];
+  try {
+    let deviceId = validateAccessToken(req);
     
-    delete tokenDevices[accessToken];
+    // deauthorze the device for the user
+    // you should remove this from your database
+    delete devices[deviceId];
     console.log("Deauthorized " + deviceId);
+
+    res.json({});
+  } catch (error) {
+    console.log(error.message)
+    res.status(401).json({message: error.message});
   }
-  res.json({});
 });
 
 // Use this function to create password hashes
