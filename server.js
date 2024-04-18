@@ -131,10 +131,7 @@ function getUserInfo(deviceId) {
 app.post('/authorize', function (req, res) {
   try {
     console.log(req.body);
-    let accessToken = req.body.accessToken;
-    if (!accessToken) throw new Error("Missing access token.");
-    let deviceId = tokenDevices[accessToken];
-    if (!deviceId) throw new Error("Invalid access token: " + accessToken);
+    let deviceId = validateAccessToken(req);
     let username = req.body.username;
     if (!username) throw new Error("Missing username.");
     let userInfo = users[username];

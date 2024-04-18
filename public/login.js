@@ -1,12 +1,15 @@
 function authorize() {
+  let accessToken = (window.location.hash || "#").substring(1);
   fetch("/authorize", {
     method: "POST",
     body: JSON.stringify({
-      accessToken: (window.location.hash || "#").substring(1),
       username: username.value,
       password: passwordHash(password.value)
     }),
-    headers: {"Content-type": "application/json"}
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-type": "application/json"
+    }
   }).then(response => {
     if (response.ok) {
       link.innerHTML = "connected!"

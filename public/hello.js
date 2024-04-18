@@ -1,4 +1,4 @@
-import { init, uiReady, auth, deviceManager, messageManager } from "@Synamedia/hs-sdk";
+import { init, uiReady, auth, messageManager } from "@Synamedia/hs-sdk";
 
 let accessToken = "";
 
