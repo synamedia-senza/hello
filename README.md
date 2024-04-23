@@ -8,6 +8,8 @@ If the device is not connected to an account, it will show a QR code that you ca
 
 Hit the back button (escape key) to disconnect the device from your account.
 
+See the [Device Authentication](https://developer.synamedia.com/senza/docs/device-authentication) and [QR Code Authentication](https://developer.synamedia.com/senza/docs/qr-code-authentication) tutorials in the Senza developer documentation.
+
 ## Build
 
 ```bash
