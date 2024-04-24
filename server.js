@@ -6,6 +6,7 @@ const got = require("got");
 const decodeJwt = require("jwt-decode");
 const port = 8080;
 const config = require("./config.json");
+const oauth = require("./oauth.json");
 const app = express();
 
 app.use(express.static(__dirname + "/public"));
@@ -188,7 +189,7 @@ function passwordHash(str) {
 async function getSenzaAcesssToken() {
   let tokenResponse = await fetch("https://auth.synamedia.com/oauth/token", {
   	method: "post",
-  	body: JSON.stringify(config.oauth),
+  	body: JSON.stringify(oauth),
   	headers: {"Content-Type": "application/json"}
   });
   let json = await tokenResponse.json();
