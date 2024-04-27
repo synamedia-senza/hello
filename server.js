@@ -17,7 +17,7 @@ app.use(cors()); // enable cores
 
 const server = app.listen(port, () => console.log("Hello running on port " + port));
 
-/** Request an access token **/
+/** Request an access token! **/
 
 let tokenDevices = {};
 let users = config.users;
