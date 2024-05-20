@@ -1,9 +1,7 @@
-import { init, uiReady, auth, messageManager } from "@Synamedia/hs-sdk";
-
 let accessToken = "";
 
 window.addEventListener("load", async () => {
-  await init();
+  await hs.init();
   
   let assertion = await getClientAssertion();
   accessToken = await getAccessToken(assertion);
@@ -11,16 +9,16 @@ window.addEventListener("load", async () => {
   
   hello();
 
-  messageManager.addEventListener("message", async (event) => {
+  hs.messageManager.addEventListener("message", async (event) => {
     hello();
   });
 
-  uiReady();
+  hs.uiReady();
 });
 
 async function getClientAssertion() {
   try {
-    const client_assertion = await auth.getClientAssertion();
+    const client_assertion = await hs.auth.getClientAssertion();
     console.log("Client assertion: ", client_assertion);
     return client_assertion.hostplatform_assertion;
   } catch (e) {
