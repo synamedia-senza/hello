@@ -14,12 +14,6 @@ See the [Device Authentication](https://developer.synamedia.com/senza/docs/devic
 
 ```bash
 npm install
-
-cd public
-npm install
-npm ci
-npx webpack --config webpack.config.js
-cd ..
 ```
 
 ## Run
