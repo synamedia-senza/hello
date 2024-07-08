@@ -1,7 +1,7 @@
 let accessToken = "";
 
 window.addEventListener("load", async () => {
-  await hs.init();
+  await senza.init();
   
   let assertion = await getClientAssertion();
   accessToken = await getAccessToken(assertion);
@@ -9,16 +9,16 @@ window.addEventListener("load", async () => {
   
   hello();
 
-  hs.messageManager.addEventListener("message", async (event) => {
+  senza.messageManager.addEventListener("message", async (event) => {
     hello();
   });
 
-  hs.uiReady();
+  senza.uiReady();
 });
 
 async function getClientAssertion() {
   try {
-    const client_assertion = await hs.auth.getClientAssertion();
+    const client_assertion = await senza.auth.getClientAssertion();
     console.log("Client assertion: ", client_assertion);
     return client_assertion.hostplatform_assertion;
   } catch (e) {

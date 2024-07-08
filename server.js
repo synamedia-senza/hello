@@ -199,7 +199,7 @@ async function getSenzaAcesssToken() {
 let senzaAccessToken = "";
 getSenzaAcesssToken().then((token) => {
   senzaAccessToken = token;
-  setTimeout(() => senzaAcesssToken = getSenzaAcesssToken(), 21600000);
+  setTimeout(() => senzaAccessToken = getSenzaAcesssToken(), 21600000);
 });
 
 async function sendDeviceMessage(deviceId, payload, eventName) {
