@@ -31,20 +31,26 @@ app.post("/auth/token", async (req, res) => {
   }
 
   try {
-    const payload = await validateClientAssertion(clientAssertion);
+    const payload = decodeJwt(clientAssertion);
+    console.log("JWT:", payload);
+    validateClientAssertion(payload);
+    const jwks = await getJwks(payload.iss);
     const token = await generateAccessToken(payload);
     res.status(200).json({"access_token":token, "token_type": "bearer", "expires_in": "XXX"});
   } catch (err) {
-    console.error(`Error validate client assertion: : ${err}`);
+    console.error(`Error validating client assertion: : ${err}`);
     res.status(401).json({message: "Error validating client assertion"});
   }
 });
 
-async function validateClientAssertion(clientAssertion) {
-  const payload = decodeJwt(clientAssertion);
-  console.log("JWT:", payload);
-  const jwks = await getJwks(payload.iss);
-  return payload;
+// If you enter an audience value in the tenant configuration, it will be included in the client assertion.
+// Enter the same value in the config file, and check that the values match here.
+// This function only prints an error but you can uncomment the line that throws an error instead.
+function validateClientAssertion(payload) {
+  if (config.audience && config.audience.length && payload.aud != config.audience) {
+    console.error(`Invalid audience! Expected ${config.audience}, received ${payload.aud}`);
+    // throw new Error(`Invalid audience! Expected ${config.audience}, received ${payload.aud}`);
+  }
 }
 
 async function getJwks(iss) {
