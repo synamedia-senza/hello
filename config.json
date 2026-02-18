@@ -1,0 +1,22 @@
+{
+    "users": {
+        "andrew": {
+            "name": "Andrew",
+            "color": "#FBD6D3",
+        },
+        "eliza": {
+            "name": "Eliza", 
+            "color": "#CCCDFD",
+        },
+        "sergio": {
+            "name": "Sergio", 
+            "color": "#E3D0E5",
+        }
+    },
+    "devices": {
+        "06fffbeb0d21af04": "andrew",
+        "06fffbd70d21af04": "eliza",
+        "06fffb270d21af04": "sergio"
+    },
+    "audience: ""
+}
